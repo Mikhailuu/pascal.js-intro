@@ -4,6 +4,7 @@ import { Addition } from './Tree/Addition';
 import { Subtraction } from './Tree/Subtraction';
 import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
+import { UnMinus } from './Tree/UnMinus';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
@@ -62,6 +63,10 @@ export class SyntaxAnalyzer
 
             operationSymbol = this.symbol;
             this.nextSym();
+            // Когда ожидается очередной "символ", т.е. выражение не завершено.
+            if (this.symbol === null) {
+                throw `The expression is not complited.`;
+            }
 
             switch (operationSymbol.symbolCode) {
                 case SymbolsCodes.plus:
@@ -77,10 +82,10 @@ export class SyntaxAnalyzer
     }
     // Разбор слагаемого
     scanTerm()
-    {
+    {   
         let term = this.scanMultiplier();
         let operationSymbol = null;
-
+        
         while ( this.symbol !== null && (
                     this.symbol.symbolCode === SymbolsCodes.star ||
                     this.symbol.symbolCode === SymbolsCodes.slash
@@ -104,10 +109,19 @@ export class SyntaxAnalyzer
     // Разбор множителя
     scanMultiplier()
     {
+        let minus = false;
+        let operationSymbol = null;
+
+        if (this.symbol !== null && this.symbol.symbolCode === SymbolsCodes.minus) {
+            minus = !minus;
+            operationSymbol = this.symbol;
+            this.nextSym();
+        }
         let integerConstant = this.symbol;
 
         this.accept(SymbolsCodes.integerConst);
 
-        return new NumberConstant(integerConstant);
+        return minus ? new UnMinus(operationSymbol, new NumberConstant(integerConstant)) 
+            : new NumberConstant(integerConstant);
     }
 };

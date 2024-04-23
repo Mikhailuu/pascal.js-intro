@@ -4,6 +4,7 @@ import { Subtraction } from '../SyntaxAnalyzer/Tree/Subtraction';
 import { Division } from '../SyntaxAnalyzer/Tree/Division';
 import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
 import { NumberVariable } from './Variables/NumberVariable';
+import { UnMinus } from '../SyntaxAnalyzer/Tree/UnMinus';
 
 export class Engine
 {
@@ -70,6 +71,11 @@ export class Engine
             let leftOperand = this.evaluateTerm(expression.left);
             let rightOperand = this.evaluateTerm(expression.right);
             let result = leftOperand.value / rightOperand.value;
+
+            return new NumberVariable(result);
+        } else if (expression instanceof UnMinus) {
+            let rightOperand = this.evaluateTerm(expression.right);
+            let result = -rightOperand.value;
 
             return new NumberVariable(result);
         } else {
