@@ -112,16 +112,27 @@ export class SyntaxAnalyzer
         let minus = false;
         let operationSymbol = null;
 
-        if (this.symbol !== null && this.symbol.symbolCode === SymbolsCodes.minus) {
+        if (this.symbol !== null 
+            && this.symbol.symbolCode === SymbolsCodes.minus) {
             minus = !minus;
             operationSymbol = this.symbol;
             this.nextSym();
         }
+
         let integerConstant = this.symbol;
+        let integer = null;
+        if (this.symbol !== null 
+            && this.symbol.symbolCode === SymbolsCodes.leftParenthesis) {
+            this.nextSym();
+            integer = this.scanExpression();
+            this.accept(SymbolsCodes.rightParenthesis);
+        } else {
+            this.accept(SymbolsCodes.integerConst);
+            integer = new NumberConstant(integerConstant);
+        }
+        //this.accept(SymbolsCodes.integerConst);
 
-        this.accept(SymbolsCodes.integerConst);
-
-        return minus ? new UnMinus(operationSymbol, new NumberConstant(integerConstant)) 
-            : new NumberConstant(integerConstant);
+        return minus ? new UnMinus(operationSymbol, integer) 
+            : integer;
     }
 };
