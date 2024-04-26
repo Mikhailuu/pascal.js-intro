@@ -63,15 +63,15 @@ export class Engine {
 
     evaluateTerm(expression: TreeNodeBase) {
         if (expression instanceof Multiplication) {
-            let leftOperand = this.evaluateTerm(expression.left);
-            let rightOperand = this.evaluateTerm(expression.right);
+            let leftOperand = this.evaluateSimpleExpression(expression.left);
+            let rightOperand = this.evaluateSimpleExpression(expression.right);
 
             let result = leftOperand.value * rightOperand.value;
 
             return new NumberVariable(result);
         } else if (expression instanceof Division) {
-            let leftOperand = this.evaluateTerm(expression.left);
-            let rightOperand = this.evaluateTerm(expression.right);
+            let leftOperand = this.evaluateSimpleExpression(expression.left);
+            let rightOperand = this.evaluateSimpleExpression(expression.right);
             let result = leftOperand.value / rightOperand.value;
 
             return new NumberVariable(result);

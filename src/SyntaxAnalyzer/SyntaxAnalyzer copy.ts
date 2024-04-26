@@ -138,26 +138,17 @@ export class SyntaxAnalyzer {
         let minus = false;
         let operationSymbol = null;
         
+
         if (this.symbol !== null && this.symbol.symbolCode === SymbolsCodes.minus) {
             minus = !minus;
             operationSymbol = this.symbol;
             this.nextSym();
         }
-        
         let integerConstant: SymbolBase | null = this.symbol;
-        let integer = null;
-        if (this.symbol !== null &&
-            this.symbol.symbolCode === SymbolsCodes.leftParenthesis) {
-                this.nextSym();
-                integer = this.scanExpression();
-                this.accept(SymbolsCodes.rightParenthesis);
-            } else {
-                this.accept(SymbolsCodes.integerConst);
-                integer = new NumberConstant(integerConstant);
-            }
-        //this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще
 
-        return minus ? new UnaryMinus(operationSymbol, integer) 
-            : integer;
+        this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще
+
+        return minus ? new UnaryMinus(operationSymbol, new NumberConstant(integerConstant)) 
+            : new NumberConstant(integerConstant);
     }
 };

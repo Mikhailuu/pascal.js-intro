@@ -12,6 +12,7 @@
     "scripts": {
         "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__",
         "test_start": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__/base",
-        "test_unminus": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__/task1_unminus"
+        "test_unminus": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__/task1_unminus",
+        "test_parenthesis": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__/task2_parenthesis"
     }
 }

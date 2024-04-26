@@ -6,4 +6,6 @@ export enum SymbolsCodes {
     identifier = 'ident',
     integerConst = 'int',
     endOfLine = 'eol',
+    leftParenthesis = '(',
+    rightParenthesis = ')',
 }
