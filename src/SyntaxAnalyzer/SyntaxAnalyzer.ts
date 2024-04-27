@@ -151,7 +151,7 @@ export class SyntaxAnalyzer {
             switch (operationSymbol.symbolCode) {
                 case SymbolsCodes.minus:
                     this.nextSym();
-                    integer = this.scanMultiplier();
+                    integer = this.scanExpression();
                     integer = new UnaryMinus(operationSymbol, integer);
                     break;
                 case SymbolsCodes.integerConst:
