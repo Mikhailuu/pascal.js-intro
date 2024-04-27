@@ -9,6 +9,8 @@ import { TreeNodeBase } from './Tree/TreeNodeBase';
 import { SymbolBase } from '../LexicalAnalyzer/Symbols/SymbolBase';
 import { BinaryOperation } from './Tree/BinaryOperation';
 import { UnaryMinus } from './Tree/UnaryMinus';
+import { UnaryOperation } from './Tree/UnaryOperation';
+import { IntegerConstant } from 'src/LexicalAnalyzer/Symbols/IntegerConstant';
 
 /**
  * Синтаксический анализатор - отвечает за построение синтаксического дерева
@@ -135,20 +137,30 @@ export class SyntaxAnalyzer {
      *  Разбор "множителя"
      */
     scanMultiplier(): NumberConstant {
-        let minus = false;
-        let operationSymbol = null;
-        
-
-        if (this.symbol !== null && this.symbol.symbolCode === SymbolsCodes.minus) {
-            minus = !minus;
-            operationSymbol = this.symbol;
-            this.nextSym();
-        }
         let integerConstant: SymbolBase | null = this.symbol;
+        let integer = new NumberConstant(integerConstant);
+        let operationSymbol: SymbolBase | null = null;
+        
+        if (this.symbol !== null && (
+            this.symbol.symbolCode === SymbolsCodes.minus ||
+            this.symbol.symbolCode === SymbolsCodes.integerConst)) {
 
-        this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще
+            operationSymbol = this.symbol;
+            
 
-        return minus ? new UnaryMinus(operationSymbol, new NumberConstant(integerConstant)) 
-            : new NumberConstant(integerConstant);
+            switch (operationSymbol.symbolCode) {
+                case SymbolsCodes.minus:
+                    this.nextSym();
+                    integer = this.scanMultiplier();
+                    integer = new UnaryMinus(operationSymbol, integer);
+                    break;
+                case SymbolsCodes.integerConst:
+                    integer = new NumberConstant(integerConstant);
+                    this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще
+                    break;
+            }
+        }
+        
+        return integer;
     }
 };

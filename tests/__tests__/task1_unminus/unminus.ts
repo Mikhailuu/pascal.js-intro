@@ -10,8 +10,8 @@ import { runFile, insp } from '../../helpers/testsHelper';
 
 let pjs = runFile(import.meta.url, 'unminus.code');
 
-test('result = -4', () => {
-  expect(pjs.engine.results[0]).toBe(-4);
+test('result = 4', () => {
+  expect(pjs.engine.results[0]).toBe(4);
 });
 
 test('result = -2', () => {
